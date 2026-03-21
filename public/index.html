@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Destin — Analyse de Potentiel</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: #1a1a1a; color: #e8e0d0; font-family: Georgia, 'Times New Roman', serif; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
+    .container { width: 100%; max-width: 560px; background: #2c2c2c; border: 1px solid #d4af37; padding: 50px 40px; text-align: center; }
+    .surtitre { color: #d4af37; font-size: 10px; letter-spacing: 5px; text-transform: uppercase; margin-bottom: 16px; }
+    h1 { font-size: clamp(22px, 5vw, 32px); font-weight: normal; letter-spacing: 2px; line-height: 1.4; margin-bottom: 12px; }
+    .separateur { width: 50px; height: 1px; background: #d4af37; margin: 20px auto; }
+    .accroche { color: #a09070; font-style: italic; font-size: 15px; line-height: 1.8; margin-bottom: 36px; }
+    label { display: block; color: #d4af37; font-size: 11px; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 8px; text-align: left; }
+    select { width: 100%; background: #1a1a1a; border: 1px solid #4a4030; color: #e8e0d0; font-family: Georgia, serif; font-size: 15px; padding: 14px 16px; margin-bottom: 20px; outline: none; transition: border-color .3s; }
+    select:focus { border-color: #d4af37; }
+    .btn { display: block; width: 100%; background: transparent; border: 1px solid #d4af37; color: #d4af37; font-family: Georgia, serif; font-size: 13px; letter-spacing: 3px; text-transform: uppercase; padding: 18px; cursor: pointer; transition: all .3s; margin-top: 8px; }
+    .btn:hover { background: #d4af37; color: #1a1a1a; }
+    .note { margin-top: 24px; color: #5a5040; font-size: 12px; font-style: italic; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="surtitre">Analyse de Potentiel</div>
+    <h1>Quels sont les freins occultés<br>qui saturent ton esprit ?</h1>
+    <div class="separateur"></div>
+    <p class="accroche">
+      Identifie les mécanismes qui polluent ton quotidien<br>
+      et découvre tes forces invisibles.<br>
+      Parce qu'une analyse juste exige de la précision,<br>
+      nous fuyons l'immédiateté des tests classiques.
+    </p>
+    <label for="genre">Votre Genre</label>
+    <select id="genre">
+      <option value="">— Sélectionner —</option>
+      <option value="Homme">Homme</option>
+      <option value="Femme">Femme</option>
+    </select>
+    <label for="age">Votre Tranche d'Âge</label>
+    <select id="age">
+      <option value="">— Sélectionner —</option>
+      <option value="18-25 ans">18 — 25 ans</option>
+      <option value="26-35 ans">26 — 35 ans</option>
+      <option value="36-45 ans">36 — 45 ans</option>
+      <option value="46-55 ans">46 — 55 ans</option>
+      <option value="55 ans et plus">55 ans et plus</option>
+    </select>
+    <button class="btn" onclick="continuer()">Je lance mon étude personnalisée à 100%</button>
+    <p class="rgpd" style="margin-top:16px;font-size:11px;"><a href="rgpd.html" style="color:#5a5040;text-decoration:underline;">Politique de confidentialité & RGPD</a></p>
+    <p class="note">Diagnostic personnalisé · Envoyé par email · Résultat sous 24h</p>
+  </div>
+  <script>
+    function continuer() {
+      const genre = document.getElementById('genre').value;
+      const age = document.getElementById('age').value;
+      if (!genre || !age) { alert('Veuillez sélectionner votre genre et votre tranche d\'âge.'); return; }
+      localStorage.setItem('dlm_genre', genre);
+      localStorage.setItem('dlm_age', age);
+      window.location.href = 'questions.html';
+    }
+  </script>
+</body>
+</html>

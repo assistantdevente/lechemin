@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Paiement — Lechemin</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: #1a1a1a; color: #e8e0d0; font-family: Georgia, 'Times New Roman', serif; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
+    .container { width: 100%; max-width: 560px; background: #2c2c2c; border: 1px solid #d4af37; padding: 50px 40px; text-align: center; }
+    .surtitre { color: #d4af37; font-size: 10px; letter-spacing: 5px; text-transform: uppercase; margin-bottom: 16px; }
+    h1 { font-size: clamp(20px,4vw,28px); font-weight: normal; letter-spacing: 2px; margin-bottom: 10px; }
+    .separateur { width: 50px; height: 1px; background: #d4af37; margin: 20px auto; }
+    .prix { font-size: 42px; color: #d4af37; margin: 20px 0 8px; font-style: italic; }
+    .sous-prix { color: #7a6e5e; font-size: 13px; margin-bottom: 36px; }
+    .avantages { text-align: left; margin-bottom: 36px; }
+    .avantage { display: flex; align-items: flex-start; gap: 12px; padding: 12px 0; border-bottom: 1px solid #3a3020; color: #c8bea8; font-size: 14px; line-height: 1.6; }
+    .avantage:last-child { border-bottom: none; }
+    .check { color: #d4af37; font-size: 16px; flex-shrink: 0; }
+    .btn-coords { display: block; width: 100%; background: #d4af37; color: #1a1a1a; font-family: Georgia, serif; font-size: 13px; letter-spacing: 3px; text-transform: uppercase; padding: 18px; border: none; cursor: pointer; margin-bottom: 14px; transition: opacity .3s; text-align: center; }
+    .btn-coords:hover { opacity: .85; }
+    .btn-valider { display: block; width: 100%; background: transparent; border: 1px solid #d4af37; color: #d4af37; font-family: Georgia, serif; font-size: 13px; letter-spacing: 3px; text-transform: uppercase; padding: 18px; cursor: pointer; transition: all .3s; margin-top: 14px; }
+    .btn-valider:hover { background: #d4af37; color: #1a1a1a; }
+    .btn-valider:disabled { opacity: .4; cursor: not-allowed; }
+    .securite { margin-top: 24px; color: #4a4030; font-size: 11px; font-style: italic; }
+    .message { margin-top: 16px; font-style: italic; font-size: 14px; color: #a09070; min-height: 24px; }
+    .attente { background: #1a1a1a; border: 1px solid #3a3020; padding: 16px; margin-top: 20px; color: #7a6e5e; font-size: 13px; font-style: italic; line-height: 1.8; }
+    .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.85); z-index: 100; align-items: center; justify-content: center; padding: 20px; }
+    .modal-overlay.active { display: flex; }
+    .modal { background: #2c2c2c; border: 1px solid #d4af37; padding: 40px; max-width: 460px; width: 100%; text-align: left; }
+    .modal h2 { color: #d4af37; font-size: 16px; font-weight: normal; letter-spacing: 2px; margin-bottom: 20px; }
+    .rib { background: #1a1a1a; padding: 20px; margin-bottom: 20px; font-size: 13px; line-height: 2; color: #c8bea8; }
+    .rib span { color: #d4af37; }
+    .instruction { color: #7a6e5e; font-size: 13px; margin-bottom: 20px; line-height: 1.8; }
+    .btn-mail { display: block; width: 100%; background: #d4af37; color: #1a1a1a; font-family: Georgia, serif; font-size: 12px; letter-spacing: 2px; text-transform: uppercase; padding: 14px; text-decoration: none; text-align: center; margin-bottom: 12px; transition: opacity .3s; }
+    .btn-mail:hover { opacity: .85; }
+    .btn-close { background: transparent; border: 1px solid #4a4030; color: #7a6e5e; font-family: Georgia, serif; font-size: 11px; letter-spacing: 2px; text-transform: uppercase; padding: 12px 24px; cursor: pointer; transition: all .3s; }
+    .btn-close:hover { border-color: #d4af37; color: #d4af37; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="surtitre">Accès Premium</div>
+    <h1>Votre Analyse<br>Vous Attend</h1>
+    <div class="separateur"></div>
+    <div class="prix">14,99€</div>
+    <div class="sous-prix">Paiement unique · Sans abonnement</div>
+    <div class="avantages">
+      <div class="avantage"><span class="check">✦</span><span>15 paragraphes d'analyse de votre chemin de vie générés par IA</span></div>
+      <div class="avantage"><span class="check">✦</span><span>Livraison par email dans les 24 heures suivant votre paiement</span></div>
+      <div class="avantage"><span class="check">✦</span><span>Analyse strictement confidentielle et personnalisée</span></div>
+      <div class="avantage"><span class="check">✦</span><span>Adapté à votre genre et votre tranche d'âge</span></div>
+    </div>
+    <button class="btn-coords" onclick="document.getElementById('modalVirement').classList.add('active')">Voir les coordonnées bancaires →</button>
+    <button class="btn-valider" id="btnValider" onclick="validerCommande()">✦ J'ai effectué mon virement ✦</button>
+    <div class="attente">Votre analyse vous sera envoyée dans les 24 heures<br>suivant la confirmation de votre paiement.</div>
+    <div class="message" id="message"></div>
+    <p class="securite">🔒 Paiement sécurisé · Vos données ne sont jamais revendues</p>
+  </div>
+
+  <div class="modal-overlay" id="modalVirement">
+    <div class="modal">
+      <h2>✦ Coordonnées Bancaires</h2>
+      <div class="rib">
+        <span>Bénéficiaire :</span> Thierry De Keuleneer<br>
+        <span>IBAN :</span> BE92950161601123<br>
+        <span>BIC :</span> CTBKBEBXXXX<br>
+        <span>Montant :</span> 14,99 €<br>
+        <span>Référence :</span> <span id="refClient">LECHEMIN + prénom + 4 lettres nom</span>
+      </div>
+      <p class="instruction">Après votre virement, envoyez votre preuve de paiement ci-dessous. Votre appli mail s'ouvrira — joignez votre capture d'écran et envoyez.</p>
+      <a class="btn-mail" id="btnMail" href="#">✉ Envoyer ma preuve de paiement</a>
+      <button class="btn-close" onclick="document.getElementById('modalVirement').classList.remove('active')">Fermer</button>
+    </div>
+  </div>
+
+  <script>
+    const ref = localStorage.getItem('dlm_reference') || 'LECHEMIN + prénom + 4 lettres nom';
+    document.getElementById('refClient').textContent = ref;
+    const sujet = encodeURIComponent('Preuve de paiement Lechemin');
+    const corps = encodeURIComponent('Bonjour,\n\nJe viens d\'effectuer mon virement de 14,99€ pour mon Analyse du Chemin de Vie.\n\nRéfére
+cat > public/paiement.html << 'EOF'
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Paiement — Lechemin</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: #1a1a1a; color: #e8e0d0; font-family: Georgia, 'Times New Roman', serif; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
+    .container { width: 100%; max-width: 560px; background: #2c2c2c; border: 1px solid #d4af37; padding: 50px 40px; text-align: center; }
+    .surtitre { color: #d4af37; font-size: 10px; letter-spacing: 5px; text-transform: uppercase; margin-bottom: 16px; }
+    h1 { font-size: clamp(20px,4vw,28px); font-weight: normal; letter-spacing: 2px; margin-bottom: 10px; }
+    .separateur { width: 50px; height: 1px; background: #d4af37; margin: 20px auto; }
+    .prix { font-size: 42px; color: #d4af37; margin: 20px 0 8px; font-style: italic; }
+    .sous-prix { color: #7a6e5e; font-size: 13px; margin-bottom: 36px; }
+    .avantages { text-align: left; margin-bottom: 36px; }
+    .avantage { display: flex; align-items: flex-start; gap: 12px; padding: 12px 0; border-bottom: 1px solid #3a3020; color: #c8bea8; font-size: 14px; line-height: 1.6; }
+    .avantage:last-child { border-bottom: none; }
+    .check { color: #d4af37; font-size: 16px; flex-shrink: 0; }
+    .btn-coords { display: block; width: 100%; background: #d4af37; color: #1a1a1a; font-family: Georgia, serif; font-size: 13px; letter-spacing: 3px; text-transform: uppercase; padding: 18px; border: none; cursor: pointer; margin-bottom: 14px; transition: opacity .3s; text-align: center; }
+    .btn-coords:hover { opacity: .85; }
+    .btn-valider { display: block; width: 100%; background: transparent; border: 1px solid #d4af37; color: #d4af37; font-family: Georgia, serif; font-size: 13px; letter-spacing: 3px; text-transform: uppercase; padding: 18px; cursor: pointer; transition: all .3s; margin-top: 14px; }
+    .btn-valider:hover { background: #d4af37; color: #1a1a1a; }
+    .btn-valider:disabled { opacity: .4; cursor: not-allowed; }
+    .securite { margin-top: 24px; color: #4a4030; font-size: 11px; font-style: italic; }
+    .message { margin-top: 16px; font-style: italic; font-size: 14px; color: #a09070; min-height: 24px; }
+    .attente { background: #1a1a1a; border: 1px solid #3a3020; padding: 16px; margin-top: 20px; color: #7a6e5e; font-size: 13px; font-style: italic; line-height: 1.8; }
+    .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.85); z-index: 100; align-items: center; justify-content: center; padding: 20px; }
+    .modal-overlay.active { display: flex; }
+    .modal { background: #2c2c2c; border: 1px solid #d4af37; padding: 40px; max-width: 460px; width: 100%; text-align: left; }
+    .modal h2 { color: #d4af37; font-size: 16px; font-weight: normal; letter-spacing: 2px; margin-bottom: 20px; }
+    .rib { background: #1a1a1a; padding: 20px; margin-bottom: 20px; font-size: 13px; line-height: 2; color: #c8bea8; }
+    .rib span { color: #d4af37; }
+    .instruction { color: #7a6e5e; font-size: 13px; margin-bottom: 20px; line-height: 1.8; }
+    .btn-mail { display: block; width: 100%; background: #d4af37; color: #1a1a1a; font-family: Georgia, serif; font-size: 12px; letter-spacing: 2px; text-transform: uppercase; padding: 14px; text-decoration: none; text-align: center; margin-bottom: 12px; transition: opacity .3s; }
+    .btn-mail:hover { opacity: .85; }
+    .btn-close { background: transparent; border: 1px solid #4a4030; color: #7a6e5e; font-family: Georgia, serif; font-size: 11px; letter-spacing: 2px; text-transform: uppercase; padding: 12px 24px; cursor: pointer; transition: all .3s; }
+    .btn-close:hover { border-color: #d4af37; color: #d4af37; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="surtitre">Accès Premium</div>
+    <h1>Votre Analyse<br>Vous Attend</h1>
+    <div class="separateur"></div>
+    <div class="prix">14,99€</div>
+    <div class="sous-prix">Paiement unique · Sans abonnement</div>
+    <div class="avantages">
+      <div class="avantage"><span class="check">✦</span><span>15 paragraphes d'analyse de votre chemin de vie générés par IA</span></div>
+      <div class="avantage"><span class="check">✦</span><span>Livraison par email dans les 24 heures suivant votre paiement</span></div>
+      <div class="avantage"><span class="check">✦</span><span>Analyse strictement confidentielle et personnalisée</span></div>
+      <div class="avantage"><span class="check">✦</span><span>Adapté à votre genre et votre tranche d'âge</span></div>
+    </div>
+    <button class="btn-coords" onclick="document.getElementById('modalVirement').classList.add('active')">Voir les coordonnées bancaires →</button>
+    <button class="btn-valider" id="btnValider" onclick="validerCommande()">✦ J'ai effectué mon virement ✦</button>
+    <div class="attente">Votre analyse vous sera envoyée dans les 24 heures<br>suivant la confirmation de votre paiement.</div>
+    <div class="message" id="message"></div>
+    <p class="securite">🔒 Paiement sécurisé · Vos données ne sont jamais revendues</p>
+  </div>
+
+  <div class="modal-overlay" id="modalVirement">
+    <div class="modal">
+      <h2>✦ Coordonnées Bancaires</h2>
+      <div class="rib">
+        <span>Bénéficiaire :</span> Thierry De Keuleneer<br>
+        <span>IBAN :</span> BE92950161601123<br>
+        <span>BIC :</span> CTBKBEBXXXX<br>
+        <span>Montant :</span> 14,99 €<br>
+        <span>Référence :</span> <span id="refClient">LECHEMIN + prénom + 4 lettres nom</span>
+      </div>
+      <p class="instruction">Après votre virement, envoyez votre preuve de paiement ci-dessous. Votre appli mail s'ouvrira — joignez votre capture d'écran et envoyez.</p>
+      <a class="btn-mail" id="btnMail" href="#">✉ Envoyer ma preuve de paiement</a>
+      <button class="btn-close" onclick="document.getElementById('modalVirement').classList.remove('active')">Fermer</button>
+    </div>
+  </div>
+
+  <script>
+    const ref = localStorage.getItem('dlm_reference') || 'LECHEMIN + prénom + 4 lettres nom';
+    document.getElementById('refClient').textContent = ref;
+    const sujet = encodeURIComponent('Preuve de paiement Lechemin');
+    const corps = encodeURIComponent('Bonjour,\n\nJe viens d\'effectuer mon virement de 14,99€ pour mon Analyse du Chemin de Vie.\n\nRéférence utilisée : ' + ref + '\n\nVeuillez trouver en pièce jointe ma preuve de virement.\n\nMerci !');
+    document.getElementById('btnMail').href = 'mailto:assistantdevente@gmail.com?subject=' + sujet + '&body=' + corps;
+
+    async function validerCommande() {
+      const btn = document.getElementById('btnValider');
+      const msg = document.getElementById('message');
+      const email = localStorage.getItem('dlm_email');
+      const genre = localStorage.getItem('dlm_genre');
+      const age = localStorage.getItem('dlm_age');
+      const prenom = localStorage.getItem('dlm_prenom');
+      const nom = localStorage.getItem('dlm_nom');
+      const reponses = JSON.parse(localStorage.getItem('dlm_reponses') || '[]');
+      const questions = JSON.parse(localStorage.getItem('dlm_questions') || '[]');
+      const texteLibre = localStorage.getItem('dlm_texte');
+      if (!email || !reponses.length) { msg.textContent = 'Erreur : veuillez recommencer depuis le début.'; return; }
+      btn.disabled = true;
+      msg.textContent = '✦ Enregistrement en cours...';
+      try {
+        const res = await fetch('/sauvegarder', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, genre, age, prenom, nom, reponses, questions, texteLibre })
+        });
+        const data = await res.json();
+        if (data.succes) { window.location.href = 'merci.html'; }
+        else { msg.textContent = data.erreur || 'Une erreur est survenue.'; btn.disabled = false; }
+      } catch (e) { msg.textContent = 'Erreur de connexion. Réessayez.'; btn.disabled = false; }
+    }
+  </script>
+</body>
+</html>
